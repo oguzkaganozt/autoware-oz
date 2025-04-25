@@ -32,7 +32,7 @@ RUN source /opt/autoware/setup.bash \
     && cat /rosdep-simulator-exec-depend-packages.txt
 
 ### Scenario Simulator
-FROM ghcr.io/autowarefoundation/autoware:core AS scenario-simulator
+FROM ghcr.io/autowarefoundation/autoware:universe AS scenario-simulator
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 ARG ROS_DISTRO
 ARG LIB_DIR
