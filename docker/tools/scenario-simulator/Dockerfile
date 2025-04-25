@@ -9,7 +9,7 @@ RUN chmod +x /autoware/resolve_rosdep_keys.sh
 COPY src/simulator /autoware/src/simulator
 WORKDIR /autoware
 
-# Install dependencies and build the scenario simulator
+# Install dependencies
 # hadolint ignore=SC1091
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     apt-get update \
@@ -17,6 +17,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     && rosdep update && rosdep install -y --from-paths src --ignore-src --rosdistro $ROS_DISTRO \
     && /autoware/cleanup_apt.sh
 
+# Build the scenario simulator
 # hadolint ignore=SC1091
 RUN --mount=type=cache,target=${CCACHE_DIR} \
     source /opt/autoware/setup.bash \
@@ -32,7 +33,7 @@ RUN source /opt/autoware/setup.bash \
     && cat /rosdep-simulator-exec-depend-packages.txt
 
 ### Scenario Simulator
-FROM ghcr.io/autowarefoundation/autoware:core AS scenario-simulator
+FROM ghcr.io/autowarefoundation/autoware:universe AS scenario-simulator
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 ARG ROS_DISTRO
 ARG LIB_DIR
