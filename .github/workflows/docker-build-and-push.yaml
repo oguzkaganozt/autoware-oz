@@ -95,6 +95,9 @@ jobs:
 
   docker-build-and-push-tools:
     needs: [load-env]
+    permissions:
+      packages: write
+      contents: read
     strategy:
       matrix:
         platform: [amd64]
