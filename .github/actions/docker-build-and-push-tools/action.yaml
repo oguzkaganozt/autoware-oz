@@ -11,6 +11,9 @@ inputs:
   build-args:
     description: Additional build args.
     required: false
+  token:
+    description: GitHub token.
+    required: true
 
 runs:
   using: composite
@@ -95,7 +98,7 @@ runs:
       with:
         registry: ghcr.io
         username: ${{ github.repository_owner }}
-        password: ${{ github.token }}
+        password: ${{ inputs.token }}
 
     - name: Build and Push to GitHub Container Registry
       uses: docker/bake-action@v5

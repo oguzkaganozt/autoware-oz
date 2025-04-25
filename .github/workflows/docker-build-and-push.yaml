@@ -148,6 +148,7 @@ jobs:
           (github.event_name == 'push' && github.ref_type == 'tag') }}
         uses: ./.github/actions/docker-build-and-push-tools
         with:
+          token: ${{ secrets.GH_PAT_TOKEN }}
           platform: ${{ matrix.platform }}
           target-image: autoware-tools
           build-args: |
