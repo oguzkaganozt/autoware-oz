@@ -98,6 +98,8 @@ jobs:
     permissions:
       packages: write
       contents: read
+      attestations: write
+      id-token: write
     strategy:
       matrix:
         platform: [amd64]
@@ -114,7 +116,7 @@ jobs:
       - name: Set git config
         uses: autowarefoundation/autoware-github-actions/set-git-config@v1
         with:
-          token: ${{ secrets.GH_PAT_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Get changed files
         id: changed-files
@@ -151,9 +153,9 @@ jobs:
           (github.event_name == 'push' && github.ref_type == 'tag') }}
         uses: ./.github/actions/docker-build-and-push-tools
         with:
-          token: ${{ secrets.GH_PAT_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           platform: ${{ matrix.platform }}
-          target-image: autoware-oz
+          target-image: autoware-tools
           build-args: |
             *.platform=${{ matrix.arch-platform }}
             *.args.ROS_DISTRO=${{ needs.load-env.outputs.rosdistro }}
