@@ -103,7 +103,7 @@ jobs:
             runner: ubuntu-22.04
             arch-platform: linux/amd64
             lib-dir: x86_64
-    runs-on: ${{ matrix.runner }}
+    runs-on: buildjet-32vcpu-ubuntu-2204
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
