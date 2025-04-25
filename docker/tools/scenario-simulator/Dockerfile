@@ -32,15 +32,17 @@ RUN --mount=type=cache,target=${CCACHE_DIR} \
     && find /opt/autoware/lib -type f -name "*.py" -exec chmod +x {} \; \
     && find /opt/autoware/share -type f -name "*.py" -exec chmod +x {} \;
 
-# ### Scenario Simulator
-FROM ghcr.io/autowarefoundation/autoware:core AS scenario-simulator
+### Scenario Simulator
+FROM ghcr.io/autowarefoundation/autoware:universe AS scenario-simulator
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 ARG ROS_DISTRO
 ARG LIB_DIR
 
+# Copy the built simulator from the builder stage
 COPY --from=builder /opt/autoware /opt/autoware
 COPY --from=builder /rosdep-simulator-exec-depend-packages.txt /tmp/rosdep-simulator-exec-depend-packages.txt
 
+# Install dependencies for scenario simulator
 # hadolint ignore=SC2002
 RUN --mount=type=ssh \
     --mount=type=cache,target=/var/cache/apt,sharing=locked \

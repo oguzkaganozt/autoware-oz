@@ -2,33 +2,54 @@
 # cspell:ignore
 # shellcheck disable=SC1090,SC1091
 
-run_scenario_simulator() {
-    echo -e "\e[32mRunning scenario simulator...\e[0m"
+# Colors
+CLR_RESET='\033[0m'
+CLR_GREEN='\033[0;32m'
+CLR_YELLOW='\033[0;33m'
 
+set_default_values() {
     # Set default values if not provided
     ARCHITECTURE_TYPE=${ARCHITECTURE_TYPE:-awf/universe/20240605}
     SENSOR_MODEL=${SENSOR_MODEL:-sample_sensor_kit}
     VEHICLE_MODEL=${VEHICLE_MODEL:-sample_vehicle}
-    INITIALIZE_DURATION=${INITIALIZE_DURATION:-90}
-    GLOBAL_FRAME_RATE=${GLOBAL_FRAME_RATE:-30}
-    OUTPUT_DIRECTORY=${OUTPUT_DIRECTORY:-/autoware/scenario-sim/output}
-    GLOBAL_TIMEOUT=${GLOBAL_TIMEOUT:-120}
-    RECORD=${RECORD:-false}
+
     USE_SIM_TIME=${USE_SIM_TIME:-false}
+    GLOBAL_FRAME_RATE=${GLOBAL_FRAME_RATE:-30}
+    INITIALIZE_DURATION=${INITIALIZE_DURATION:-90}
+    GLOBAL_TIMEOUT=${GLOBAL_TIMEOUT:-120}
+    
+    RECORD=${RECORD:-false}
+    OUTPUT_DIRECTORY=${OUTPUT_DIRECTORY:-/autoware/scenario-sim/output}
 
     # Print all variables
-    echo "SCENARIO: $SCENARIO"
-    echo "ARCHITECTURE_TYPE: $ARCHITECTURE_TYPE"
-    echo "SENSOR_MODEL: $SENSOR_MODEL"
-    echo "VEHICLE_MODEL: $VEHICLE_MODEL"
-    echo "INITIALIZE_DURATION: $INITIALIZE_DURATION"
-    echo "GLOBAL_TIMEOUT: $GLOBAL_TIMEOUT"
-    echo "USE_SIM_TIME: $USE_SIM_TIME"
-    echo "GLOBAL_FRAME_RATE: $GLOBAL_FRAME_RATE"
-    echo "RECORD: $RECORD"
-    echo "OUTPUT_DIRECTORY: $OUTPUT_DIRECTORY"
+    echo -e "${CLR_YELLOW}--------------------------------${CLR_RESET}"
+    echo -e "${CLR_YELLOW}ARCHITECTURE_TYPE: $ARCHITECTURE_TYPE${CLR_RESET}"
+    echo -e "${CLR_YELLOW}SENSOR_MODEL: $SENSOR_MODEL${CLR_RESET}"
+    echo -e "${CLR_YELLOW}VEHICLE_MODEL: $VEHICLE_MODEL${CLR_RESET}"
+    echo -e "${CLR_YELLOW}--------------------------------${CLR_RESET}"
 
-    # Launch scenario test runner
+    echo -e "${CLR_YELLOW}USE_SIM_TIME: $USE_SIM_TIME${CLR_RESET}"
+    echo -e "${CLR_YELLOW}GLOBAL_FRAME_RATE: $GLOBAL_FRAME_RATE${CLR_RESET}"
+    echo -e "${CLR_YELLOW}INITIALIZE_DURATION: $INITIALIZE_DURATION${CLR_RESET}"
+    echo -e "${CLR_YELLOW}GLOBAL_TIMEOUT: $GLOBAL_TIMEOUT${CLR_RESET}"
+    echo -e "${CLR_YELLOW}--------------------------------${CLR_RESET}"
+
+    echo -e "${CLR_YELLOW}RECORD: $RECORD${CLR_RESET}"
+    echo -e "${CLR_YELLOW}OUTPUT_DIRECTORY: $OUTPUT_DIRECTORY${CLR_RESET}"
+    echo -e "${CLR_YELLOW}--------------------------------${CLR_RESET}"
+}
+
+run_scenario_simulator() {
+    echo -e "${CLR_GREEN}Running scenario simulator...${CLR_RESET}"
+
+    # Set default values
+    set_default_values
+
+    # Print scenario
+    echo -e "${CLR_YELLOW}SCENARIO: $SCENARIO${CLR_RESET}"
+    echo -e "${CLR_YELLOW}--------------------------------${CLR_RESET}"
+
+    # Launch scenario runner
     ros2 launch scenario_test_runner scenario_test_runner.launch.py \
         launch_autoware:=false \
         launch_rviz:=false \
@@ -45,31 +66,12 @@ run_scenario_simulator() {
 }
 
 run_random_simulator() {
-    echo -e "\e[32mRunning random scenario simulator...\e[0m"
+    echo -e "${CLR_GREEN}Running random scenario simulator...${CLR_RESET}"
 
-    # Set default values if not provided
-    ARCHITECTURE_TYPE=${ARCHITECTURE_TYPE:-awf/universe/20240605}
-    SENSOR_MODEL=${SENSOR_MODEL:-sample_sensor_kit}
-    VEHICLE_MODEL=${VEHICLE_MODEL:-sample_vehicle}
-    INITIALIZE_DURATION=${INITIALIZE_DURATION:-90}
-    GLOBAL_FRAME_RATE=${GLOBAL_FRAME_RATE:-30}
-    OUTPUT_DIRECTORY=${OUTPUT_DIRECTORY:-/autoware/scenario-sim/output}
-    GLOBAL_TIMEOUT=${GLOBAL_TIMEOUT:-120}
-    RECORD=${RECORD:-false}
-    USE_SIM_TIME=${USE_SIM_TIME:-false}
+    # Set default values
+    set_default_values
 
-    # Print all variables
-    echo "ARCHITECTURE_TYPE: $ARCHITECTURE_TYPE"
-    echo "SENSOR_MODEL: $SENSOR_MODEL"
-    echo "VEHICLE_MODEL: $VEHICLE_MODEL"
-    echo "INITIALIZE_DURATION: $INITIALIZE_DURATION"
-    echo "GLOBAL_FRAME_RATE: $GLOBAL_FRAME_RATE"
-    echo "OUTPUT_DIRECTORY: $OUTPUT_DIRECTORY"
-    echo "GLOBAL_TIMEOUT: $GLOBAL_TIMEOUT"
-    echo "RECORD: $RECORD"
-    echo "USE_SIM_TIME: $USE_SIM_TIME"
-
-    # Launch scenario test runner
+    # Launch random scenario runner
     ros2 launch random_test_runner random_test.launch.py \
         launch_autoware:=false \
         launch_rviz:=false \
@@ -84,20 +86,21 @@ run_random_simulator() {
         use_sim_time:="$USE_SIM_TIME"
 }
 
+# MAIN ****************************************************************************************
 # Source ROS and Autoware setup files
 source "/opt/ros/$ROS_DISTRO/setup.bash"
 source "/opt/autoware/setup.bash"
 
 # Execute passed command if provided, otherwise run scenario simulator
 if [ $# -gt 0 ]; then
-    echo "Executing passed command"
+    echo -e "${CLR_YELLOW}Executing passed command${CLR_RESET}"
     exec "$@"
 else
     if [ -z "$SCENARIO" ]; then
-        echo "SCENARIO is not set, running scenario simulator"
+        echo -e "${CLR_RESET}SCENARIO is not set, running scenario simulator${CLR_RESET}"
         run_scenario_simulator
     else
-        echo "SCENARIO is set, running random simulator"
+        echo -e "${CLR_RESET}SCENARIO is set, running random simulator${CLR_RESET}"
         run_random_simulator
     fi
 fi
