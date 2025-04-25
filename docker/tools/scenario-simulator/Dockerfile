@@ -33,7 +33,7 @@ RUN --mount=type=cache,target=${CCACHE_DIR} \
     && find /opt/autoware/share -type f -name "*.py" -exec chmod +x {} \;
 
 # ### Scenario Simulator
-FROM ghcr.io/autowarefoundation/autoware:universe AS scenario-simulator
+FROM ghcr.io/autowarefoundation/autoware:core AS scenario-simulator
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 ARG ROS_DISTRO
 ARG LIB_DIR
@@ -50,6 +50,10 @@ RUN --mount=type=ssh \
     && pip install --no-cache-dir yamale xmlschema \
     && cat /tmp/rosdep-simulator-exec-depend-packages.txt | xargs apt-get install -y --no-install-recommends \
     && /autoware/cleanup_system.sh $LIB_DIR $ROS_DISTRO
+
+# install xmlschema<4.0.0 before rosdep install as workaround for scenario_simulator_v2
+# https://github.com/autowarefoundation/autoware/commit/d3a6d5a2ea2073dd9cff87055437d87c8a62df72
+RUN pip3 install --user xmlschema==3.4.5
 
 COPY docker/tools/scenario-simulator/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
