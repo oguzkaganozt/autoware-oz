@@ -153,7 +153,7 @@ jobs:
         with:
           token: ${{ secrets.GH_PAT_TOKEN }}
           platform: ${{ matrix.platform }}
-          target-image: autoware-tools
+          target-image: autoware-oz
           build-args: |
             *.platform=${{ matrix.arch-platform }}
             *.args.ROS_DISTRO=${{ needs.load-env.outputs.rosdistro }}
