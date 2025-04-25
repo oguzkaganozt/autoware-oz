@@ -111,7 +111,7 @@ jobs:
       - name: Set git config
         uses: autowarefoundation/autoware-github-actions/set-git-config@v1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GH_PAT_TOKEN }}
 
       - name: Get changed files
         id: changed-files

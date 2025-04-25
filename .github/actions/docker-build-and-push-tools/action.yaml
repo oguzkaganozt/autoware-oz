@@ -95,7 +95,7 @@ runs:
       with:
         registry: ghcr.io
         username: ${{ github.repository_owner }}
-        password: ${{ github.token }}
+        password: ${{ secrets.GH_PAT_TOKEN }}
 
     - name: Build and Push to GitHub Container Registry
       uses: docker/bake-action@v5
