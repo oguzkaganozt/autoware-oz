@@ -105,7 +105,7 @@ jobs:
         platform: [amd64]
         include:
           - platform: amd64
-            runner: ubuntu-22.04
+            runner: buildjet-32vcpu-ubuntu-2204
             arch-platform: linux/amd64
             lib-dir: x86_64
     runs-on: buildjet-32vcpu-ubuntu-2204
@@ -155,7 +155,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           platform: ${{ matrix.platform }}
-          target-image: autoware-tools
+          target-image: autoware-oz
           build-args: |
             *.platform=${{ matrix.arch-platform }}
             *.args.ROS_DISTRO=${{ needs.load-env.outputs.rosdistro }}
