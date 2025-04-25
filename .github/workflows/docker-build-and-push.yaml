@@ -155,7 +155,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           platform: ${{ matrix.platform }}
-          target-image: autoware-oz
+          target-image: autoware-tools
           build-args: |
             *.platform=${{ matrix.arch-platform }}
             *.args.ROS_DISTRO=${{ needs.load-env.outputs.rosdistro }}
